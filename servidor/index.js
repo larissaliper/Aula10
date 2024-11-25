@@ -11,7 +11,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '',
+    password: 'mysqlfatec',
     database: 'aulabd'
 });
 
@@ -22,4 +22,36 @@ db.connect((erro) => {
     } else {
         console.log('Conectado ao MySQL com sucesso!');
     }
+});
+
+// rota para cadastrar usuário
+app.post('/alunos', (req, res) => {
+    const { nome, cidade, estadp } = req.body;
+
+    const sql = 'INSERT INTO alunos (nome, cidade, estado) VALUES (?, ?, ?)';
+
+    bd.query(sql, [nome, cidade, estado], (err,result) =>{
+        if (err)
+        {
+            return res.status(500),json({ error: 'Erro ao cadastrar aluno '});
+        }
+        res.status(201).json({ message: 'Aluno cadastrado com sucesso!', id: result.insertId });
+    });
+});
+
+//Rota para consultar todos os usuarios
+app.delete('/alunos', (req, res => {
+    const sql = 'SELECT * FROM alunos';
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erro ao consultar alunos'});
+        }
+        res.json(results);
+    });
+}));
+
+//iniciando o servidor
+app.listen(POST, () => {
+    console.log('Servidor rodando em http://localhost:${PORT}');
 });
